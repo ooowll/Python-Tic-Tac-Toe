@@ -48,28 +48,48 @@ def check_winner(board):
             return 'X'
         elif board[combo[0]] == board[combo[1]] == board[combo[2]] and board[combo[0]] == 'O':
             return 'O'
-    return 'F'
-def main():
+    
+    for cell in board:
+        if cell not in ['X', 'O']:
+            return 'F'
+    return 'T'
+
+
+def play_again():
+    choice = 'wrong'
+    while choice not in ['Y', 'N']:
+        choice = input("Do you want to play again? (Y/N): ").upper()
+        if choice not in ['Y', 'N']:
+            print("Invalid choice. Please enter 'Y' or 'N'.")
+
+    return choice == 'Y'
+
+
     #Welcome message
-    print("Welcome to Tic Tac Toe!")
+print("Welcome to Tic Tac Toe!")
 
-    #Select players
-    player1, player2 = select_player()
-    current_player = player1
+#Select players
+player1, player2 = select_player()
+current_player = player1
 
-    #Initialize the board
-    board = [_ for _ in range(9)]
+#Initialize the board
+board = [_ for _ in range(9)]
+draw_board(board)
+
+game_on = True
+while game_on:
+    board = place_marker(board, current_player)
     draw_board(board)
-
-    game_on = True
-    while game_on:
-        board = place_marker(board, current_player)
-        draw_board(board)
-        winner = check_winner(board)
-        if winner != 'F':
+    winner = check_winner(board)
+    if winner != 'F':
+        if winner == 'T':
+            print("It's a tie!")
+            game_on = play_again()
+        else:
             print(f"Player {winner} wins!")
-            game_on = False
-        current_player = player2 if current_player == player1 else player1
+            game_on = play_again()
+            board = [_ for _ in range(9)]
+            current_player = player1
 
+    current_player = player2 if current_player == player1 else player1
 
-main()
